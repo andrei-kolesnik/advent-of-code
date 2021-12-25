@@ -1,2 +1,1 @@
-# advent-of-code
-Advent of Code is an Advent calendar of small programming puzzles at https://adventofcode.com/
+# [Advent of Code](https://adventofcode.com/) is an Advent calendar of small programming puzzles
