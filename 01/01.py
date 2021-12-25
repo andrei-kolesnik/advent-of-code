@@ -2,7 +2,7 @@ from typing import List
 
 
 def assert_result(expected, actual):
-    print("PASS", actual if actual == expected else "FAIL")
+    print(("PASS", actual) if actual == expected else ("FAIL", expected, actual))
 
 
 def day_01_part_1_brute(data: List[int]) -> int:
