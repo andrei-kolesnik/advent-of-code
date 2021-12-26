@@ -33,13 +33,21 @@ def day_01_part_2_brute(data: List[int]) -> int:
     return count
 
 
-def day_01_generic(data: List[int], window_size: int) -> int:
+def day_01_general(data: List[int], window_size: int) -> int:
     window = data[0:window_size]
     count = 0
     for index, number in enumerate(data[window_size:], start=window_size):
         if sum(data[index-window_size+1:index+1]) > sum(window):
             count += 1
         window = window[1:] + [data[index]]
+    return count
+
+
+def day_01_general_optimized(data: List[int], window_size: int) -> int:
+    count = 0
+    for index, number in enumerate(data[window_size:], start=window_size):
+        if data[index] > data[index-window_size]:
+            count += 1
     return count
 
 
@@ -51,12 +59,16 @@ if __name__ == '__main__':
 
             assert_result(7, day_01_part_1_brute(data=test_data))
             assert_result(7, day_01_part_1_comprehension(data=test_data))
-            assert_result(7, day_01_generic(data=test_data, window_size=1))
+            assert_result(7, day_01_general(data=test_data, window_size=1))
+            assert_result(7, day_01_general_optimized(data=test_data, window_size=1))
             assert_result(1446, day_01_part_1_brute(data=real_data))
             assert_result(1446, day_01_part_1_comprehension(data=real_data))
-            assert_result(1446, day_01_generic(data=real_data, window_size=1))
+            assert_result(1446, day_01_general(data=real_data, window_size=1))
+            assert_result(1446, day_01_general_optimized(data=real_data, window_size=1))
 
             assert_result(5, day_01_part_2_brute(data=test_data))
-            assert_result(5, day_01_generic(data=test_data, window_size=3))
+            assert_result(5, day_01_general(data=test_data, window_size=3))
+            assert_result(5, day_01_general_optimized(data=test_data, window_size=3))
             assert_result(1486, day_01_part_2_brute(data=real_data))
-            assert_result(1486, day_01_generic(data=real_data, window_size=3))
+            assert_result(1486, day_01_general(data=real_data, window_size=3))
+            assert_result(1486, day_01_general_optimized(data=real_data, window_size=3))
