@@ -7,6 +7,7 @@ def assert_result(expected, actual):
 
 
 def parse_input(data: List[str]) -> tuple[list[int], list[np.array]]:
+    data = list(data)  # to preserve the original data so it can be reused
     drawn_numbers_data = data.pop(0)
     drawn_numbers = [int(x) for x in drawn_numbers_data.split(',')]
 
@@ -32,15 +33,14 @@ def play_number_on_board(drawn_number: int, board: np.array) -> np.array:
 
 
 def check_board(board: np.array) -> bool:
-    bool_board = (board == 0)
-    if any(bool_board.all(axis=0)):
-        return True
-    if any(bool_board.all(axis=1)):
-        return True
+    is_solved_board = (board == 0)
+    for axis in range(0, is_solved_board.ndim):
+        if any(is_solved_board.all(axis=axis)):
+            return True
     return False
 
 
-def play_game(drawn_numbers: List[int], boards: list[np.array]) -> int:
+def play_game_to_win(drawn_numbers: List[int], boards: list[np.array]) -> int:
     for drawn_number in drawn_numbers:
         for index, board in enumerate(boards):
             boards[index] = play_number_on_board(drawn_number=drawn_number, board=board)
@@ -49,9 +49,25 @@ def play_game(drawn_numbers: List[int], boards: list[np.array]) -> int:
     return 0
 
 
+def play_game_to_lose(drawn_numbers: List[int], boards: list[np.array]) -> int:
+    for drawn_number in drawn_numbers:
+        boards = [play_number_on_board(drawn_number=drawn_number, board=board) for board in boards]
+        now_wining_boards = [board for board in boards if not check_board(board)]
+        if not now_wining_boards:
+            return np.sum(boards[-1]) * drawn_number
+        boards = now_wining_boards
+    return 0
+
+
 def day_04_part_1(data: List[str]) -> int:
     drawn_numbers, boards = parse_input(data=data)
-    result = play_game(drawn_numbers=drawn_numbers, boards=boards)
+    result = play_game_to_win(drawn_numbers=drawn_numbers, boards=boards)
+    return result
+
+
+def day_04_part_2(data: List[str]) -> int:
+    drawn_numbers, boards = parse_input(data=data)
+    result = play_game_to_lose(drawn_numbers=drawn_numbers, boards=boards)
     return result
 
 
@@ -63,3 +79,6 @@ if __name__ == '__main__':
 
             assert_result(4512, day_04_part_1(data=test_data))
             assert_result(44088, day_04_part_1(data=real_data))
+
+            assert_result(1924, day_04_part_2(data=test_data))
+            assert_result(23670, day_04_part_2(data=real_data))
